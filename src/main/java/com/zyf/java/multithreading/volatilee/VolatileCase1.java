@@ -9,10 +9,10 @@ package com.zyf.java.multithreading.volatilee;
  */
 public class VolatileCase1 {
 
-    private static volatile int a = 0;
+    private static int a = 0;
 
     private static void inc() {
-                a++;
+        a++;
     }
 
     public static void main(String[] args) {
