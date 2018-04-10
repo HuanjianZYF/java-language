@@ -1,4 +1,4 @@
-package com.zyf.java.innerclass;
+package com.zyf.java.syntaxsuger.innerclass;
 
 /**
  * @Author zyf
