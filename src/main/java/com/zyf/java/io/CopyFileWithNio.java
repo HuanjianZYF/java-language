@@ -2,22 +2,24 @@ package com.zyf.java.io;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
  * @Author zyf
  * @CreateAt 2018/4/10 下午4:21
+ * 用nio复制文件内容，基于块的io，一直在搬运..
  */
 public class CopyFileWithNio {
 
     public static void main(String[] args) throws Exception {
 
-        FileOutputStream file1 = null;
-        FileInputStream file2 = null;
+        RandomAccessFile file1 = null;
+        RandomAccessFile file2 = null;
         try {
-            file1 = new FileOutputStream("/Users/zyf/Documents/zyf/随笔");
-            file2 = new FileInputStream("/Users/zyf/Documents/zyf/a.txt");
+            file1 = new RandomAccessFile("/Users/zyf/Documents/zyf/随笔", "rw");
+            file2 = new RandomAccessFile("/Users/zyf/Documents/zyf/a.txt", "rw");
             FileChannel channel1 = file1.getChannel();
             FileChannel channel2 = file2.getChannel();
 
