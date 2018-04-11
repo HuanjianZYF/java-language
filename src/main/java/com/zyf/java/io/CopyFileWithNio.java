@@ -23,7 +23,7 @@ public class CopyFileWithNio {
             FileChannel channel1 = file1.getChannel();
             FileChannel channel2 = file2.getChannel();
 
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            ByteBuffer buffer = ByteBuffer.allocate(5);
 
             while(true) {
                 int hasRead = channel1.read(buffer);
