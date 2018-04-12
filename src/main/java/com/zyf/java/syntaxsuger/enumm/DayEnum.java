@@ -48,5 +48,13 @@ public enum DayEnum {
                 break;
             }
         }
+
+        //通过反射获得枚举类所有成员
+        Class<?> clazz = day.getClass();
+        if (clazz.isEnum()) {
+            DayEnum[] members = (DayEnum[]) clazz.getEnumConstants();
+            System.out.println(Arrays.toString(members));
+        }
+
     }
 }
