@@ -2,7 +2,6 @@ package com.zyf.java.multithreading.forkjoin;
 
 import lombok.AllArgsConstructor;
 
-import java.util.Arrays;
 import java.util.concurrent.RecursiveTask;
 
 /**
