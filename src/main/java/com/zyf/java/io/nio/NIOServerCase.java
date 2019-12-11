@@ -42,13 +42,12 @@ public class NIOServerCase {
         public void run() {
             while (true) {
                 try {
-                    selector.select(1000);
+                    selector.select(20);
                     Set<SelectionKey> selectionKeys = selector.selectedKeys();
                     Iterator<SelectionKey> iterator = selectionKeys.iterator();
                     SelectionKey selectionKey = null;
                     while (iterator.hasNext()) {
                         selectionKey = iterator.next();
-                        iterator.remove();
                         handle(selectionKey);
                     }
                 } catch (Exception e) {
@@ -59,6 +58,7 @@ public class NIOServerCase {
         private void handle(SelectionKey selectionKey) throws Exception {
             if (selectionKey.isValid()) {
                 if (selectionKey.isAcceptable()) {
+                    System.out.println("有请求进来了，我接一下..");
                     ServerSocketChannel serverSocketChannel = (ServerSocketChannel) selectionKey.channel();
                     SocketChannel channel = serverSocketChannel.accept();
                     channel.configureBlocking(false);
@@ -66,6 +66,7 @@ public class NIOServerCase {
                 }
 
                 if (selectionKey.isReadable()) {
+                    System.out.println("客户端发东西过来了..");
                     SocketChannel sc = (SocketChannel) selectionKey.channel();
                     ByteBuffer buffer = ByteBuffer.allocate(1024);
                     int size = sc.read(buffer);
@@ -79,8 +80,6 @@ public class NIOServerCase {
                         doWrite(sc);
                     }
                 }
-                System.out.println("客户端能读？：" + selectionKey.isReadable() + "\n客户端能写？："
-                    + selectionKey.isWritable());
             }
         }
 
