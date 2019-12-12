@@ -7,6 +7,9 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 
 /**
  * @Author wb-zyf471922
@@ -28,6 +31,10 @@ public class TimeClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        // 按照换行符来分割发送tcp报文
+                        socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                        // 将发送过来的字符组装成字符串
+                        socketChannel.pipeline().addLast(new StringDecoder());
                         socketChannel.pipeline().addLast(new TimeClientHandler());
                     }
                 });
@@ -44,10 +51,7 @@ public class TimeClient {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            ByteBuf buf = (ByteBuf) msg;
-            byte[] bytes = new byte[buf.readableBytes()];
-            buf.readBytes(bytes);
-            String body = new String(bytes, "UTF-8");
+            String body = (String) msg;
             System.out.println("服务端返回" + body);
         }
 
@@ -58,10 +62,13 @@ public class TimeClient {
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            byte[] bytes = "hello".getBytes();
-            ByteBuf buf = Unpooled.buffer(bytes.length);
-            buf.writeBytes(bytes);
-            ctx.writeAndFlush(buf);
+            byte[] bytes = ("hello服务器，你就是一头猪，呵呵呵呵呵呵加加加啊那我得" + System.getProperty("line.separator")).getBytes();
+
+            for (int i = 0; i < 100; i++) {
+                ByteBuf buf = Unpooled.buffer(bytes.length);
+                buf.writeBytes(bytes);
+                ctx.writeAndFlush(buf);
+            }
         }
     }
 }

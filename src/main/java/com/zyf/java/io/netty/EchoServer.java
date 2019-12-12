@@ -7,14 +7,16 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+
 
 /**
  * @Author wb-zyf471922
- * @Date 2019/12/11 16:33
+ * @Date 2019/12/12 9:56
  **/
-public class TimeServer {
+public class EchoServer {
+
 
     public void bind(int port) throws Exception {
 
@@ -50,7 +52,7 @@ public class TimeServer {
         protected void initChannel(SocketChannel socketChannel) throws Exception {
 
             // 按照换行符来分割发送tcp报文
-            socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+            socketChannel.pipeline().addLast(new FixedLengthFrameDecoder(20));
             // 将发送过来的字符组装成字符串
             socketChannel.pipeline().addLast(new StringDecoder());
             socketChannel.pipeline().addLast(new MyHttpServerHandler());
@@ -58,7 +60,7 @@ public class TimeServer {
     }
 
     public static void main(String[] args) throws Exception {
-        new TimeServer().bind(8080);
+        new EchoServer().bind(8080);
     }
 
     public static class MyHttpServerHandler extends ChannelInboundHandlerAdapter {
@@ -68,7 +70,7 @@ public class TimeServer {
             String body = (String) msg;
             System.out.println("客户端请求:" + body);
 
-            byte[] bytes = ("server say" + System.getProperty("line.separator")).getBytes();
+            byte[] bytes = ("server say我是一头猪，天天笑嘻嘻，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈").getBytes();
             ByteBuf buf = Unpooled.buffer(bytes.length);
             buf.writeBytes(bytes);
             ctx.writeAndFlush(buf);
